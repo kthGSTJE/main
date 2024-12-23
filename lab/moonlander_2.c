@@ -64,5 +64,6 @@ int main(void){
     {
         printf("You have crashed on the moon's surface with a speed of %.2f m/s\n", velocity);
         printf("May god have mercy on your soul!\n\n");
+        printf("You are not welcome here");
     }
 }
