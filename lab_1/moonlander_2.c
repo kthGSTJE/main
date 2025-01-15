@@ -4,7 +4,7 @@
 
 int main(void){
     int time = 0;
-    int throttle = 0;
+    unsigned int throttle = 0;
     float fuel = 500.0;
     float velocity = -25.0;
     float height = 250.0;
@@ -37,7 +37,7 @@ int main(void){
                     throttle = fuel;
                 }
                 
-            } while (throttle<0 || throttle>100);
+            } while (throttle>100);
             
         }
         else{
