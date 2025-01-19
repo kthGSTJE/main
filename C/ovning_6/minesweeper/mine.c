@@ -2,16 +2,19 @@
 #include<stdlib.h>
 #include<time.h>
 
-#define HEIGHT 10
-#define WIDTH 9
+#define HEIGHT 5
+#define WIDTH 5
+#define BOMBS 7
 
 int main (void){
 
-    int matrix[HEIGHT][WIDTH];
+    char matrix[HEIGHT][WIDTH];
     srand((unsigned) time(NULL));
+
     char decending  = 'A';
     char across = '1';
-    char input = '*';
+    char inputLetter = '*';
+    char inputNumber = '*';
 
     //skriv ut index för bredd
     printf("  ");
@@ -29,20 +32,20 @@ int main (void){
         for (int j = 0; j < WIDTH; j++)
         {
             int temp = rand()%10;
-            if (temp== 9)
+            if (temp!= 9)
             {
-                matrix[i][j] = 9;
+                matrix[i][j] = '0';
             }
             else{
-                matrix[i][j] = 0;
+                matrix[i][j] = '9';
             }
-            printf("%d ", matrix[i][j]);
+            printf("* ");
         }
         printf("\n");
     }
     printf("Tile to press (eg. E3): ");
     
-    scanf("%c", &input);
-
-
+    scanf("%c", &inputLetter);
+    scanf("%c", &inputNumber);
+    printf("%c.%c", inputLetter, inputNumber);
 }

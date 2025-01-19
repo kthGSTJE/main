@@ -5,10 +5,7 @@ int main (void){
 
     char input[SIZE] = {0};
     char letter = '*';
-
     
-
-
     do
     {
         scanf("%c", &letter);
