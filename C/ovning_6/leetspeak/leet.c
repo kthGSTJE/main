@@ -6,6 +6,7 @@ int main (void){
     char input[SIZE] = {0};
     char letter = '*';
     
+    printf("Enter a phrase to be translated: ");
     do
     {
         scanf("%c", &letter);
