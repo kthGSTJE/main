@@ -17,6 +17,7 @@ int main (void) {
     for (int i = 0; i < WORDSIZE; i++)
     {
         printf("%c", word[i]);
+        printf("small change");
     }
     
 
