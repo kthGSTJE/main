@@ -33,4 +33,12 @@ loop:
     #wired and
     #0x4001 0800, 4 bitar per pinben
     #GPIO måste slås på
-    #
+    
+    #subrutiner för GPIO
+    #GPIOI initialize - setup
+    #GPIOBO bit operation, - bitmönster och för vilka bitar
+    #GPIOBC bit clear
+    #GPIOOC output control - använd gärna inte
+
+    #kan inte nästla subrutiner vanligtvis
+    #push/pop stackmodellen kan användas för att nästla subrutiner
