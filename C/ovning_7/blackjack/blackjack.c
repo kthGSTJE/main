@@ -12,7 +12,6 @@ void ShowRandomCard(void);
 int RandomNumber(int num);
 int GetRank(int aCard);
 void PrintCard(int aCard);
-//hej alfred
 
 int main (void) {
     InitializeRandom();
