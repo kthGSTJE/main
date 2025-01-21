@@ -12,29 +12,47 @@ void ShowRandomCard(void);
 int RandomNumber(int num);
 int GetRank(int aCard);
 void PrintCard(int aCard);
-//hej alfred
-//hej hej
+
 
 int main (void) {
 
     int currentCard = -1;
+    int yourSum = 0;
+    int dealerSum = 0;
+    char choice = '*';
+
     InitializeRandom();
-    /*int deck[DECKSUITS][DECKVALUES];
+
+    printf("Blackjack Game\n");
+
+    //förfrågning av stand/hit i loop
+    do
+    {
+        printf("Stand or hit? (s/h): ");
+        scanf("%c", &choice);
+        if (choice)
+        {
+            /* code */
+        }
+        
+    } while (choice!='s');
+    
+    //skriv ut kortet och summan av din poäng
+    //slumpa randomtal tills stand väljs eller över 21
+    //skriv ut slutgiltig summa
+
+    //dealern drar sitt tills 17 eller över eller bust
+    //jämför med dealern
+
+    
+
+}
+/*int deck[DECKSUITS][DECKVALUES];
     for (int i = 0; i < DECKSIZE; i++)
     {
         deck[i/DECKVALUES][i%DECKVALUES] = i;
     }
-    */
-    for (int i = 0; i < 5; i++)
-    {
-        currentCard = RandomNumber(DECKSIZE);
-        PrintCard(currentCard);
-        printf("%d", GetRank(currentCard));
-    }
-    
-    ShowRandomCard();
-
-}
+*/
 
 void PrintCard(int aCard){
     int suit = aCard/DECKVALUES;
