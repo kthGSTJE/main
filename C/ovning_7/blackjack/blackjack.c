@@ -13,6 +13,7 @@ int RandomNumber(int num);
 int GetRank(int aCard);
 void PrintCard(int aCard);
 //hej alfred
+//hej hej
 
 int main (void) {
     InitializeRandom();
