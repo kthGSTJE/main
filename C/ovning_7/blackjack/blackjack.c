@@ -16,12 +16,22 @@ void PrintCard(int aCard);
 //hej hej
 
 int main (void) {
+
+    int currentCard = -1;
     InitializeRandom();
-    int deck[DECKSUITS][DECKVALUES];
+    /*int deck[DECKSUITS][DECKVALUES];
     for (int i = 0; i < DECKSIZE; i++)
     {
         deck[i/DECKVALUES][i%DECKVALUES] = i;
     }
+    */
+    for (int i = 0; i < 5; i++)
+    {
+        currentCard = RandomNumber(DECKSIZE);
+        PrintCard(currentCard);
+        printf("%d", GetRank(currentCard));
+    }
+    
     ShowRandomCard();
 
 }
