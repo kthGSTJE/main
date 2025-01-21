@@ -6,6 +6,8 @@
 #define DECKSUITS 4
 #define DECKSIZE 52
 #define FACE 10
+#define BUST 22
+#define STAND 17
 
 void InitializeRandom(void);
 void ShowRandomCard(void);
@@ -30,19 +32,61 @@ int main (void) {
     {
         printf("Stand or hit? (s/h): ");
         scanf("%c", &choice);
-        if (choice)
+        if (choice == 'h')
         {
-            /* code */
+            //skriv ut kortet och summan av din poäng
+            currentCard = RandomNumber(DECKSIZE);
+            PrintCard(currentCard);
+            yourSum = yourSum + GetRank(currentCard);
+            printf("Your score: %d\n", yourSum);
         }
-        
-    } while (choice!='s');
-    
-    //skriv ut kortet och summan av din poäng
-    //slumpa randomtal tills stand väljs eller över 21
-    //skriv ut slutgiltig summa
+        //slumpa random kort tills stand väljs eller över 21
+    } while (choice!='s' && yourSum<BUST);
+
 
     //dealern drar sitt tills 17 eller över eller bust
-    //jämför med dealern
+    printf("Dealers turn. Stands on 17 or higher\n");
+    do
+    {
+        currentCard = RandomNumber(DECKSIZE);
+        PrintCard(currentCard);
+        dealerSum = dealerSum + GetRank(currentCard);
+        printf("Dealer score: %d\n", dealerSum); 
+        printf("Your score: %d\n", yourSum);   
+    } while (dealerSum<=STAND || dealerSum<yourSum && yourSum<BUST);
+    
+    //jämför med dealern och bust finale
+    if (yourSum>dealerSum)
+    {
+        if (dealerSum>=BUST)
+        {
+            printf("Draw\n");
+        }
+        else if(yourSum<BUST){
+            printf("The house wins\n");
+        }
+        else{
+            printf("You win!\n");
+        }
+    }
+    else if (yourSum<dealerSum)
+    {  
+        if (yourSum>=BUST)
+        {
+            printf("Draw\n");
+        }
+        else if(dealerSum<BUST){
+            printf("The house wins\n");
+        }
+        else{
+            printf("You win\n");
+        }
+        
+    }
+    else{
+        printf("Draw final\n");
+    }
+    
 
     
 
