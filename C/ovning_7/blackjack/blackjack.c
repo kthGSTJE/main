@@ -6,23 +6,100 @@
 #define DECKSUITS 4
 #define DECKSIZE 52
 #define FACE 10
+#define BUST 22
+#define STAND 17
 
 void InitializeRandom(void);
 void ShowRandomCard(void);
 int RandomNumber(int num);
 int GetRank(int aCard);
 void PrintCard(int aCard);
+<<<<<<< HEAD
+=======
+
+>>>>>>> newFeature
 
 int main (void) {
+
+    int currentCard = -1;
+    int yourSum = 0;
+    int dealerSum = 0;
+    char choice = '*';
+
     InitializeRandom();
-    int deck[DECKSUITS][DECKVALUES];
+
+    printf("Blackjack Game\n");
+
+    //förfrågning av stand/hit i loop
+    do
+    {
+        printf("Stand or hit? (s/h): ");
+        scanf("%c", &choice);
+        if (choice == 'h')
+        {
+            //skriv ut kortet och summan av din poäng
+            currentCard = RandomNumber(DECKSIZE);
+            PrintCard(currentCard);
+            yourSum = yourSum + GetRank(currentCard);
+            printf("Your score: %d\n", yourSum);
+        }
+        //slumpa random kort tills stand väljs eller över 21
+    } while (choice!='s' && yourSum<BUST);
+
+
+    //dealern drar sitt tills 17 eller över eller bust
+    printf("Dealers turn. Stands on 17 or higher\n");
+    do
+    {
+        currentCard = RandomNumber(DECKSIZE);
+        PrintCard(currentCard);
+        dealerSum = dealerSum + GetRank(currentCard);
+        printf("Dealer score: %d\n", dealerSum); 
+        printf("Your score: %d\n", yourSum);   
+    } while (dealerSum<=STAND || dealerSum<yourSum && yourSum<BUST);
+    
+    //jämför med dealern och bust finale
+    if (yourSum>dealerSum)
+    {
+        if (dealerSum>=BUST)
+        {
+            printf("Draw\n");
+        }
+        else if(yourSum<BUST){
+            printf("The house wins\n");
+        }
+        else{
+            printf("You win!\n");
+        }
+    }
+    else if (yourSum<dealerSum)
+    {  
+        if (yourSum>=BUST)
+        {
+            printf("Draw\n");
+        }
+        else if(dealerSum<BUST){
+            printf("The house wins\n");
+        }
+        else{
+            printf("You win\n");
+        }
+        
+    }
+    else{
+        printf("Draw final\n");
+    }
+    
+
+    
+
+}
+/*int deck[DECKSUITS][DECKVALUES];
     for (int i = 0; i < DECKSIZE; i++)
     {
         deck[i/DECKVALUES][i%DECKVALUES] = i;
     }
-    ShowRandomCard();
-
-}
+*/
 
 void PrintCard(int aCard){
     int suit = aCard/DECKVALUES;
