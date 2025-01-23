@@ -14,10 +14,6 @@ void ShowRandomCard(void);
 int RandomNumber(int num);
 int GetRank(int aCard);
 void PrintCard(int aCard);
-<<<<<<< HEAD
-=======
-
->>>>>>> newFeature
 
 int main (void) {
 
@@ -66,10 +62,10 @@ int main (void) {
             printf("Draw\n");
         }
         else if(yourSum<BUST){
-            printf("The house wins\n");
+            printf("You Win!\n");
         }
         else{
-            printf("You win!\n");
+            printf("The house wins\n");
         }
     }
     else if (yourSum<dealerSum)
