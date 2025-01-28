@@ -42,3 +42,10 @@ loop:
 
     #kan inte nästla subrutiner vanligtvis
     #push/pop stackmodellen kan användas för att nästla subrutiner
+
+    #parallella io
+    #lampor = Rader 0-2
+    #gpio9-15 column
+    #mönster 0xRRXC R = row , C = column (x000)
+    #timers (5&6)
+    
