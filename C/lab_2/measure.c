@@ -2,6 +2,11 @@
 #include<stdlib.h>
 #include<time.h>
 
+void ViewValues();
+void EnterValue();
+void Compute();
+void ResetValues();
+
 int main (void){
 
     char input = '*';
@@ -12,8 +17,19 @@ int main (void){
         scanf(" %c", &input);
         switch (input)
         {
-        case 'h':
-            
+        case 'v':
+            ViewValues();
+            break;
+        case 'e':
+            EnterValue();
+            break;
+        case 'c':
+            Compute();
+            break;
+        case 'r':
+            ResetValues();
+            break;
+        case 'q':
             break;
         
         default:
@@ -23,4 +39,18 @@ int main (void){
     } while (input!='q');
     
 
+}
+
+
+void ViewValues(){
+    printf("View not finished\n");
+}
+void EnterValue(){
+    printf("Enter not finished\n");
+}
+void Compute(){
+    printf("Compute not finished\n");
+}
+void ResetValues(){
+    printf("Reset not finished\n");
 }
