@@ -14,6 +14,7 @@ int main (void) {
     int lettersUsed = -1;
     int currentLetter = 0;
     int mostFreqLetter = 0;
+    int higestLetterFreq = 0;
 
     //läs in mening i array
     printf("Enter a sentence: \n");
@@ -37,17 +38,18 @@ int main (void) {
     //skriv ut letters
     for (int i = 0; i < ALPHABET; i++)
     {
-        printf("%c ", i+'A');
+        printf(" %c ", i+'A');
 
     }
     printf("\n");
     for (int i = 0; i < ALPHABET; i++)
     {
-        printf("%d ", letters[i]);
+        printf("%2d ", letters[i]);
         //ta reda på högsta tal i letters
-        if (mostFreqLetter<letters[i])
+        if (higestLetterFreq<letters[i])
         {
-            mostFreqLetter = i;
+            higestLetterFreq = letters[i];
+            mostFreqLetter = i;  
         }
     }
     printf("\nMost frequent letter %c, Used %d times", mostFreqLetter+'A', letters[mostFreqLetter]);
