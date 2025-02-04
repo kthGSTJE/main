@@ -49,3 +49,21 @@ loop:
     #mönster 0xRRXC R = row , C = column (x000)
     #timers (5&6)
     
+
+    #F6 C-programmering
+    #bitwise and & - endast ett & tecken
+    #bitwise or
+    #assemblerkod synlig för c .global
+    #byte = char i C
+    #FSM
+    #enum
+    #vad fan är DAC
+    #digital analog conversion?
+    #channel0 ska användas
+
+    #lab3 dimmer
+    #knappsats
+    #2-3 programmerade ska funka för 0-1
+    #lab3 niv 2
+    #trafik
+
