@@ -67,3 +67,14 @@ loop:
     #lab3 niv 2
     #trafik
 
+    #F7 A/D PID Regulators
+    #succesiv approx
+    #sample hold
+    #pa3 adc
+    #adc syncront
+    #fixed point
+    #pid reglering 
+    #exceptions
+    #interrupt
+    
+
