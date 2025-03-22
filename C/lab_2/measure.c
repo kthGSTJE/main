@@ -3,14 +3,14 @@
 #include<time.h>
 #define VALUES 10
 
-void ViewValues(int values[], int *pLastVal);
+void ViewValues(int values[], int lastVal);
 void EnterValue(int values[], int *pLastVal);
-void Compute(int values[], int LastVal);
+void Compute(int values[], int lastVal);
 void ResetValues(int values[], int *pLastVal);
-int GetMax(int values[], int *pLastVal);
-int GetMin(int values[], int *pLastVal);
-float GetAverage(int values[], int *pLastVal);
-void PrintNormalized(int values[], int *pLastVal);
+int GetMax(int values[], int lastVal);
+int GetMin(int values[], int lastVal);
+float GetAverage(int values[], int lastVal);
+void PrintNormalized(int values[], int lastVal);
 
 int main (void){
 
@@ -29,7 +29,7 @@ int main (void){
         switch (input)
         {
         case 'v':
-            ViewValues(measurements, &latestValue);
+            ViewValues(measurements, latestValue);
             break;
 
         case 'e':
@@ -37,7 +37,7 @@ int main (void){
             break;
 
         case 'c':
-            Compute(measurements, &latestValue);
+            Compute(measurements, latestValue);
             break;
 
         case 'r':
@@ -57,14 +57,14 @@ int main (void){
 }
 
 //prints out values in the measurement array if any have been entered
-void ViewValues(int values[], int *pLastVal){
+void ViewValues(int values[], int lastVal){
     printf("VIEW\n\n");
-    if (*pLastVal<0){
+    if (lastVal<0){
         printf("No values in data array\n\n");
     }
     else {
         printf("[ ");
-        for (int i = 0; i <= *pLastVal; i++)
+        for (int i = 0; i <= lastVal; i++)
         {
             printf(" %2d ", values[i]);
         }
@@ -94,18 +94,18 @@ void EnterValue(int values[],int *pLastVal){
     printf("\n"); 
 }
 //prints out highest, lowest, average and normalized values in measurement array if possible
-void Compute(int values[], int *pLastVal){
+void Compute(int values[], int lastVal){
     printf("COMPUTE\n\n");
-    if (*pLastVal<0)
+    if (lastVal<0)
     {
         printf("No values in data array\n");
     }
     else{
-        printf("Maximum value: %d\n", GetMax(values, &*pLastVal));
-        printf("Minimum value: %d\n", GetMin(values, &*pLastVal));
-        printf("Average: %.2f\n", GetAverage(values, &*pLastVal));
+        printf("Maximum value: %d\n", GetMax(values, lastVal));
+        printf("Minimum value: %d\n", GetMin(values, lastVal));
+        printf("Average: %.2f\n", GetAverage(values, lastVal));
         printf("Normalized values: \n");
-        PrintNormalized(values, &*pLastVal);
+        PrintNormalized(values, lastVal);
     }
 }
 //resets measurement array and restores the counter to start value
@@ -120,9 +120,9 @@ void ResetValues(int values[], int *pLastVal){
     printf("Measurements have been reset!\n\n");
 }
 //presents the max value in array
-int GetMax(int values[], int *pLastVal){
+int GetMax(int values[], int lastVal){
     int max = 0;
-    for (int i = 0; i <= *pLastVal; i++)
+    for (int i = 0; i <= lastVal; i++)
     {
         if (!i)
         {
@@ -137,9 +137,9 @@ int GetMax(int values[], int *pLastVal){
     
 }
 //presents the min value in array
-int GetMin(int values[], int *pLastVal){
+int GetMin(int values[], int lastVal){
     int min = 0;
-    for (int i = 0; i <= *pLastVal; i++)
+    for (int i = 0; i <= lastVal; i++)
     {
         if (!i)
         {
@@ -154,22 +154,22 @@ int GetMin(int values[], int *pLastVal){
 
 }
 //calculates average of ints in array
-float GetAverage(int values[], int *pLastVal){
+float GetAverage(int values[], int lastVal){
     int total = 0;
-    for (int i = 0; i <= *pLastVal; i++)
+    for (int i = 0; i <= lastVal; i++)
     {
         total += values[i];
     }
-    return (float)total/(*pLastVal+1);
+    return (float)total/(lastVal+1);
 
 }
 //prints out normalized values of array
-void PrintNormalized(int values[], int *pLastVal){
+void PrintNormalized(int values[], int lastVal){
     int tempNorm = 0;
     printf("[ ");
-    for (int i = 0; i <= *pLastVal; i++)
+    for (int i = 0; i <= lastVal; i++)
         {
-        tempNorm = (int)values[i]-GetAverage(values, &*pLastVal);
+        tempNorm = (int)values[i]-GetAverage(values, lastVal);
         printf(" %d ", tempNorm);
     }
     printf(" ]\n\n");
