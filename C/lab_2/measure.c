@@ -5,7 +5,7 @@
 
 void ViewValues(int values[], int *pLastVal);
 void EnterValue(int values[], int *pLastVal);
-void Compute(int values[], int *pLastVal);
+void Compute(int values[], int LastVal);
 void ResetValues(int values[], int *pLastVal);
 int GetMax(int values[], int *pLastVal);
 int GetMin(int values[], int *pLastVal);
