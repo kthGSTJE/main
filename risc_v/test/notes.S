@@ -77,4 +77,86 @@ loop:
     #exceptions
     #interrupt
     
+    #F8 Seriell kommunikation
+    #teckenminne
+    #LCD 160x80
+    #4 trådar - SPI
+    #full duplex
+    #en master
+    #multiple slaves
+    #3 kontroller
+    #SPI1
+    #3 trådar - Microwire
+    #2 Trådar - Inter Integrated Circuit - I2C
+    #Synkron, halv duplex
+    #Flera master
+    #SD-Kort
+    #ACK
 
+    #Blockarande lösning
+    #Cirkulär buffert - WR_Queue
+    #I/O Expander - fler pinnar
+     
+    #LAB 4
+    #Nivå 1
+    #oledfont.h
+    #125 sista tecknet
+    #Lägg in 5 nya tecken
+    #LCD_ShowChar
+
+    #Nivå 2
+    #dela in i 8x8 delar
+
+    #lcd.h
+    #oled.h
+    #röd display
+    #clean
+    #LCD_Clear - färg
+
+    #F9 Seriell kommunikation forts.
+
+    #HAL - hardware abstract layer, buffert
+    #2 trådar, I2C
+    #synkron, halv duplex
+    #multiple master
+
+    #CAN
+    #ASync, halvduplex
+    #noise tolerant
+    #långsam
+    #frames för komm
+
+    #EIA RS232/V24
+    #asynk, full duplex
+    #ingen klocksignal??, mottagar klocka
+    #UART
+    #TBE RBNE
+    #Baud
+    #RS422, RS485
+
+    #1-Wire
+    #singallängd
+
+    #Wireless
+    #Fart och avstånd
+    #AT-kommandon, cmd/data mode
+    #RFID fält
+
+    #LAB 5
+    #putch varning
+    #pustr varning
+    #u0_TX_queue
+    #MAIN 
+    #
+    #
+
+
+    #mhm mhm mhm mhm mhm mhm mhm mhm mhm mhm mhm mhm mhm mhm mhm mhm mhm mhm mhm hmmm hmmm mhm mhm mhm mh mm hmm hmm hmmhmhm mycket spännande
+    #avbryt avbrott avbrott som avbryter avbrotten det här är mest smörja
+
+    #mekaniskt interface(kontakt), elektriskt interface(ström), procedurellt interface
+    #
+
+    #F10 Design
+    #datautbyte, ping-pong - 2 minnesarea
+    

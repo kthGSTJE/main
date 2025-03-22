@@ -167,10 +167,10 @@ float GetAverage(int values[], int *pLastVal){
 void PrintNormalized(int values[], int *pLastVal){
     int tempNorm = 0;
     printf("[ ");
-        for (int i = 0; i <= *pLastVal; i++)
+    for (int i = 0; i <= *pLastVal; i++)
         {
-            tempNorm = (int)values[i]-GetAverage(values, &*pLastVal);
-            printf(" %d ", tempNorm);
-        }
-        printf(" ]\n\n");
+        tempNorm = (int)values[i]-GetAverage(values, &*pLastVal);
+        printf(" %d ", tempNorm);
+    }
+    printf(" ]\n\n");
 }

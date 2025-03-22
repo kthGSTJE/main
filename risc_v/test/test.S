@@ -1,8 +1,7 @@
-main:
-        li a1, 0x0000AAAA
-        li a2, 0x0000F0F0
-        and a1, a1, a2
-        xor a2, a2, a1
-        slli a2, a2, 16
-        or a1, a1, a2
+        addi t0, zero, 0xFFE
+        addi t1, zero, 0x004
+do:     srli t1, t1, 0x01
+        addi t0, t0, 0x01
+        bnez t0, do
+
         nop
