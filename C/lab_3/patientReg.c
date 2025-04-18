@@ -4,7 +4,7 @@
 #include<string.h>
 
 #define MAXPATIENTS 1000
-#define NAMELENGTH 50+1
+#define NAMELENGTH 30+1
 #define SSNLENGTH 11+1
 #define MAXIMAGES 10
 #define FILENAMELENGTH 20+1
@@ -14,27 +14,28 @@ typedef struct
    char name[NAMELENGTH];
    char personNummer[SSNLENGTH];
    int images[MAXIMAGES];
+   int numberOfImages;
 } Patient;
 
 void printMenu(void);
-Patient addPatient(int *pLastPatient);
+Patient addPatient(void);
 
-void printPatients(void);
+void printPatients(Patient patientsPrint[], int size);
 void searchPatient(void);
 void addImage(void);
 void sortPatients(void);
 void unregisterPatient(void);
 
 int main (void){
+    FILE *pFile;
     Patient patients[MAXPATIENTS];
     char inputCLI = '*';
     char inputFile[FILENAMELENGTH];
-    int lastpatient = 0;
+    int lastPatient = 0;
     //Startup - Val av lagringsfil
     printf("\nPATIENTJOURNALSYSTEM\n\n");
     printf("Vilken fil vill du anvanda: ");
     scanf("%s", inputFile);
-
 
     //CLI huvuddelen av programmet 
     printMenu();
@@ -45,10 +46,17 @@ int main (void){
         switch (inputCLI)
         {
         case '1':
-            addPatient(&lastpatient);
+            if (lastPatient<MAXPATIENTS)
+            {
+                patients[lastPatient] = addPatient();
+                lastPatient++;
+            }
+            else{
+                printf("Max antal patienter i register\n");
+            }
             break;
         case '2':
-            printPatients();
+            printPatients(patients, lastPatient);
             break;
         case '3':
             searchPatient();
@@ -63,7 +71,7 @@ int main (void){
             unregisterPatient();
             break;
         case '7':
-            printf("Quit\n");
+            printf("Avslutar programmet...\n");
             break;
         
         default:
@@ -90,17 +98,52 @@ void printMenu(void){
     
 }
 
-Patient addPatient(int *pLastPatient){
+Patient addPatient(void){
+    int input = 0;
+    char stoff = '*';
     Patient newPatient;
-
     printf("Ange personnummer: ");
-    scanf("%s", newPatient.name);
+    scanf("%s%c", newPatient.personNummer, &stoff);
     //kolla med databasen om pnummer existerar
+    printf("Ange Namn: ");
+    scanf("%[^'\n']%*c", newPatient.name);
+    newPatient.numberOfImages =0;
+    do
+    {
+        printf("Ange bildreferens %d (0 for att avsluta): ", newPatient.numberOfImages+1);
+        scanf("%d", &input);
+        //kolla om bildreferens existerar
+        if (input)
+        {
+            newPatient.images[newPatient.numberOfImages] = input;
+            newPatient.numberOfImages++;
+        }
+        
+    } while (input!=0 && newPatient.numberOfImages<10);
+
+    return newPatient;
 
 }
 
-void printPatients(void){
+void printPatients(Patient patientsPrint[], int size){
     printf("Skriver ut alla patienter\n");
+    printf("\nPersonnummer      Namn                           Bildreferenser\n\n");
+    printf("_____________________________________________________________________\n");
+    for (int p = 0; p < size; p++)
+    {
+       printf("%-18s", patientsPrint[p].personNummer);
+       printf("%-31s", patientsPrint[p].name);
+       printf("[ ");
+       for (int imageNumber = 0; imageNumber < patientsPrint[p].numberOfImages; imageNumber++)
+       {
+            printf("%d, ", patientsPrint[p].images[imageNumber]);
+       }
+       printf("]\n");
+       
+    }
+    printf("\n");
+    
+
 }
 
 void searchPatient(void){

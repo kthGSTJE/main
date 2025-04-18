@@ -8,13 +8,18 @@
 #define LOCATIONSIZE 20+1
 #define MAXBOOKS 100
 
-typedef struct
-    {
-        char title[TITLESIZE];
-        char author[AUTHORSIZE];
-        float price;
-        char location[LOCATIONSIZE];
-    } Book;
+typedef struct {
+    char name[AUTHORSIZE];
+    int birthYear;
+    char placeOfBirth[AUTHORSIZE];
+} Author;
+typedef struct{
+    char title[TITLESIZE];
+    Author authorInfo[5];
+    int authorAmount;
+    float price;
+    char location[LOCATIONSIZE];
+ } Book;
 
 void printBook (Book *pBook);
 void viewLibrary(Book library[], int size);
@@ -52,7 +57,10 @@ int main (void){
 
 void printBook (Book *pBook){
     printf("Title: %s\n", pBook->title);
-    printf("Title: %s\n", pBook->author);
+    for (int i = 0; i < pBook->authorAmount; i++)
+    {
+        printf("Author %d: %50s %5d %50s\n", i+1, pBook->authorInfo[i].name, pBook->authorInfo[i].birthYear, pBook->authorInfo[i].placeOfBirth);
+    }
     printf("Price: %.2f\n", pBook->price);
     printf("Location: %s\n\n", pBook->location);
 }
@@ -80,8 +88,18 @@ Book addBook(int *pLastBook){
     printf("Book %d\n", *pLastBook+1);
     printf("Title: ");
     scanf("%s", newLibraryBook.title);
-    printf("Author: ");
-    scanf("%s", newLibraryBook.author);
+    printf("Number of Authors: ");
+    scanf("%d", &newLibraryBook.authorAmount);
+    for (int i = 0; i < newLibraryBook.authorAmount; i++)
+    {
+        printf("Author %d name: ", i+1);
+        scanf("%s", newLibraryBook.authorInfo[i].name);
+        printf("Author %d birthyear: ", i+1);
+        scanf("%d", &newLibraryBook.authorInfo[i].birthYear);
+        printf("Author %d Place of Birth: ", i+1);
+        scanf("%s", newLibraryBook.authorInfo[i].placeOfBirth);
+    }
+    
     printf("Price: ");
     scanf("%f", &newLibraryBook.price);
     printf("Location: ");
