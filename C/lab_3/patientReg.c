@@ -28,6 +28,8 @@ void printPrintLabel(void);
 void viewPatient(Patient thePatient);
 
 void searchPatient(Patient patientsPrint[], int size);
+void searchRegister(Patient patRegister[], int size, char option, int results[], int *pTotalResults);
+void resetResults(int results[], int *pTotalResults);
 int searchRegisterSSN(Patient patRegister[], int size, char query[]);
 int searchRegisterString(Patient patRegister[], int start, int size, char query[]);
 int searchRegisterImage(Patient patRegister[], int size, int query);
@@ -189,6 +191,9 @@ void viewPatient(Patient thePatient){
 void searchPatient(Patient patRegister[], int size){
     char searchCLI = '*';
     char searchString[NAMELENGTH];
+    int results[MAXPATIENTS];
+    int totalResults;
+    resetResults(results, &totalResults);
     if (size<=0)
     {
         printf("Patientregister tomt!\n");
@@ -198,30 +203,57 @@ void searchPatient(Patient patRegister[], int size){
         {
             printf("Sok pa personnummer(1), namn(2), bildreferens(3), avsluta(4): ");
             scanf(" %c", &searchCLI);
-            searchRegister();
+            searchRegister(patRegister, size, searchCLI, results, &totalResults);
+            for (int i = 0; i < totalResults; i++)
+            {
+                viewPatient(patRegister[results[i]]);
+            }
+            
         } while (searchCLI!='4');
     }
+}
+void resetResults(int results[], int *pTotalResults){
+    for (int i = 0; i < MAXPATIENTS; i++)
+    {
+        results[i] = -1;
+    }
+    *pTotalResults=0;
 }
 void searchRegister(Patient patRegister[], int size, char option, int results[], int *pTotalResults){
     char searchString[NAMELENGTH];
     int searchint = -1;
-    int results[MAXPATIENTS];
-    int totalResults = 0;
-
+    resetResults(results, &(*pTotalResults));
     switch (option)
     {
     case '1':
         printf("Ange personnummer: ");
         scanf("%s", searchString);
-        searchRegisterSSN(patRegister, size, searchString);
+        results[0] = searchRegisterSSN(patRegister, size, searchString);
+        if (results[0]>=0)
+        {
+            (*pTotalResults)=1;
+        }
         break;
     case '2':
         printf("Ange sokstrang: ");
         scanf(" %[^'\n']%*c", searchString);
+        results[*pTotalResults] = searchRegisterString(patRegister, 0, size, searchString);
+        while (results[*pTotalResults]>=0)
+        {
+            (*pTotalResults)++;
+            results[*pTotalResults] = searchRegisterString(patRegister, results[*pTotalResults]+1, size, searchString);
+        }
+        printf("%d \n", *pTotalResults);
+        
         break;
     case '3':
         printf("Ange bildreferens: ");
         scanf("%d", &searchint);
+        results[0] = searchRegisterImage(patRegister, size, searchint);
+        if (results[0]>=0)
+        {
+            (*pTotalResults)=1;
+        }
         break;
     case '4':
         printf("Avslutar sokning\n");
