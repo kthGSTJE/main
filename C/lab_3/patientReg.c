@@ -3,14 +3,11 @@
 #include<time.h>
 #include<string.h>
 
-#define MAXPATIENTS 1000
+#define MAXPATIENTS 2
 #define NAMELENGTH 30+1
 #define SSNLENGTH 11+1
 #define MAXIMAGES 10
 #define FILENAMELENGTH 20+1
-
-#define PRINT 1
-#define NOPRINT 0
 
 typedef struct 
 {
@@ -27,7 +24,7 @@ typedef struct
 
 
 void printMenu(void);
-Patient addPatient(Patient patRegister[], int size);
+void addPatient(Patient patRegister[], int *pSize);
 
 void printPatients(Patient patientsPrint[], int size);
 void printPrintLabel(void);
@@ -43,7 +40,9 @@ void addImage(Patient patRegister[], int size);
 void sortPatients(Patient patRegister[], int size);
 void sortSSN(Patient patRegister[], int size);
 void sortName(Patient patRegister[], int size);
-void unregisterPatient(Patient patRegister[], int size);
+
+void unregisterPatient(Patient patRegister[], int *pSize);
+void confirmUnregistration(Patient patRegister[], int *pSize, int unregIndex);
 
 int main (void){
     FILE *pFile;
@@ -68,8 +67,7 @@ int main (void){
         case '1':
             if (lastPatient<MAXPATIENTS)
             {
-                patients[lastPatient] = addPatient(patients, lastPatient);
-                lastPatient++;
+                addPatient(patients, &lastPatient);
             }
             else{
                 printf("Max antal patienter i register\n");
@@ -88,7 +86,7 @@ int main (void){
             sortPatients(patients, lastPatient);
             break;
         case '6':
-            unregisterPatient(patients, lastPatient);
+            unregisterPatient(patients, &lastPatient);
             break;
         case '7':
             printf("Avslutar programmet...\n");
@@ -117,7 +115,7 @@ void printMenu(void){
     printf("%11d) Avsluta programmet\n", menuNum++);   
 }
 //Skapar ny Patient med unikt personnummer och unika bildreferenser
-Patient addPatient(Patient patRegister[], int size){
+void addPatient(Patient patRegister[], int *pSize){
     int input = 0;
     Search checkDB;
     char stoff = '*';
@@ -127,7 +125,7 @@ Patient addPatient(Patient patRegister[], int size){
     {
         printf("Ange personnummer: ");
         scanf("%s%c", newPatient.personNummer, &stoff);
-        checkDB  = searchRegisterSSN(patRegister, size, newPatient.personNummer);
+        checkDB  = searchRegisterSSN(patRegister, *pSize, newPatient.personNummer);
         if (checkDB.totalResults)
         {
             printf("Personnummeret existerar redan!\n");
@@ -146,7 +144,7 @@ Patient addPatient(Patient patRegister[], int size){
         {
             printf("Ange bildreferens %d (0 for att avsluta): ", newPatient.numberOfImages+1);
             scanf("%d", &input);
-            checkDB = searchRegisterImage(patRegister, size, input);
+            checkDB = searchRegisterImage(patRegister, *pSize, input);
             if (checkDB.totalResults)
             {
                 printf("Referensen existerar redan!\n");
@@ -161,7 +159,8 @@ Patient addPatient(Patient patRegister[], int size){
         
     } while (input!=0 && newPatient.numberOfImages<10);
 
-    return newPatient;
+    patRegister[*pSize] = newPatient;
+    (*pSize)++;
 
 }
 //Skriver ut size antal patienter i en Patient array
@@ -302,6 +301,7 @@ Search searchRegisterImage(Patient patRegister[], int size, int query){
 }
 
 void addImage(Patient patRegister[], int size){
+    printf("\nLAGG TILL BILD\n\n");
     char searchCLI = '*';
     int imageRef = 0;
     Search searchDB; 
@@ -315,7 +315,6 @@ void addImage(Patient patRegister[], int size){
         {
             printf("Du fick inte exakt 1 träff\n");
         }
-        
     } while ((searchDB.totalResults!=1) || searchCLI=='4');
     if (patRegister[searchDB.results[0]].numberOfImages<10)
     {
@@ -346,7 +345,7 @@ void addImage(Patient patRegister[], int size){
 }
 
 void sortPatients(Patient patRegister[], int size){
-    printf("Sorterar patienter efter namn/personnummer\n");
+    printf("\nSORTERING\n\n");
     char input = '*';
     printf("Sortera efter (1)personnummer, (2)namn: ");
     scanf(" %c", &input);
@@ -399,6 +398,40 @@ void sortName(Patient patRegister[], int size){
     }
 }
 
-void unregisterPatient(Patient patRegister[], int size){
-    printf("Radera en patient\n");
+void unregisterPatient(Patient patRegister[], int *pSize){
+    printf("\nAVREGISTRERING\n\n");
+    char searchCLI = '*';
+    Search searchDB; 
+    do
+    {
+        printf("Sok pa personnummer(1), namn(2), bildreferens(3), avsluta(4): ");
+        scanf(" %c", &searchCLI);
+        searchDB = searchModule(patRegister, *pSize, searchCLI);
+        if (searchDB.totalResults!=1)
+        {
+            printf("Du fick inte exakt 1 träff\n");
+        }
+    } while ((searchDB.totalResults!=1) || searchCLI=='4');
+    char input = '*';
+    printf("Vill du avregistrera patienten (j/n)? ");
+    scanf(" %c", &input);
+    switch (input)
+    {
+    case 'j':
+        confirmUnregistration(patRegister, pSize, searchDB.results[0]);
+        break;
+    case 'n':
+        
+        break;
+    default:
+        break;
+    }
+}
+void confirmUnregistration(Patient patRegister[], int *pSize, int unregIndex){
+    Patient temp;
+    (*pSize)--;
+    temp = patRegister[*pSize];
+    patRegister[*pSize] = patRegister[unregIndex];
+    patRegister[unregIndex] = temp;
+    printf("Patienten avregistreras\n");
 }
