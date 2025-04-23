@@ -3,7 +3,7 @@
 #include<time.h>
 #include<string.h>
 
-#define MAXPATIENTS 2
+#define MAXPATIENTS 1000
 #define NAMELENGTH 30+1
 #define SSNLENGTH 11+1
 #define MAXIMAGES 10
@@ -118,13 +118,11 @@ void printMenu(void){
 void addPatient(Patient patRegister[], int *pSize){
     int input = 0;
     Search checkDB;
-    char stoff = '*';
-
     Patient newPatient;
     do
     {
         printf("Ange personnummer: ");
-        scanf("%s%c", newPatient.personNummer, &stoff);
+        scanf(" %[^'\n']%*c", newPatient.personNummer);
         checkDB  = searchRegisterSSN(patRegister, *pSize, newPatient.personNummer);
         if (checkDB.totalResults)
         {
@@ -260,7 +258,7 @@ Search searchModule(Patient patRegister[], int size, char input){
 Search searchRegisterSSN(Patient patRegister[], int size, char query[]){
     Search newSearch;
     newSearch.totalResults=0;
-    for (int i = 0; i <= size; i++)
+    for (int i = 0; i < size; i++)
     {
         if (!(strcmp(query, patRegister[i].personNummer)))
         {
@@ -428,10 +426,9 @@ void unregisterPatient(Patient patRegister[], int *pSize){
     }
 }
 void confirmUnregistration(Patient patRegister[], int *pSize, int unregIndex){
-    Patient temp;
+    Patient empty;
     (*pSize)--;
-    temp = patRegister[*pSize];
-    patRegister[*pSize] = patRegister[unregIndex];
-    patRegister[unregIndex] = temp;
+    patRegister[unregIndex] = patRegister[*pSize];
+    patRegister[*pSize] = empty;
     printf("Patienten avregistreras\n");
 }
