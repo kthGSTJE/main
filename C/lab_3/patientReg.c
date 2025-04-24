@@ -7,7 +7,7 @@
 #define NAMELENGTH 30+1
 #define SSNLENGTH 11+1
 #define MAXIMAGES 10
-#define FILENAMELENGTH 20+1
+#define FILENAMELENGTH 40+1
 
 typedef struct 
 {
@@ -46,16 +46,47 @@ void confirmUnregistration(Patient patRegister[], int *pSize, int unregIndex);
 
 int main (void){
     FILE *pFile;
-    char inputFile[FILENAMELENGTH];
+    char fileName[FILENAMELENGTH];
 
     Patient patients[MAXPATIENTS];
     int lastPatient = 0;
+    int dud = 0;
     char inputCLI = '*';
     //Startup - Val av lagringsfil
     printf("\nPATIENTJOURNALSYSTEM\n\n");
     printf("Vilken fil vill du anvanda: ");
-    scanf("%s", inputFile);
-
+    scanf("%s", fileName);
+    //Läser in angiven fil
+    //Flytta till egen funktion
+    if ((pFile=fopen("patienter.txt", "r")))
+    {
+        fscanf(pFile, "%d", &lastPatient);
+        if (lastPatient<=MAXPATIENTS)
+        {
+            for (int i = 0; i < lastPatient; i++)
+            {
+                fscanf(pFile, " %[^'\n']%*c", patients[i].name);
+                fscanf(pFile, "%s", patients[i].personNummer);
+                fscanf(pFile, "%d", &patients[i].numberOfImages);
+                if (patients[i].numberOfImages)
+                {
+                    for (int img = 0; img < patients[i].numberOfImages; img++)
+                    {
+                        fscanf(pFile, "%d", &patients[i].images[img]);
+                    }
+                }
+                else{
+                    fscanf(pFile, "%d");
+                }
+            }
+        }
+        else{
+            printf("Error! For stor fil\n");
+            lastPatient=0;
+        }
+    }
+    fclose(pFile);
+    //
     //CLI huvuddelen av programmet 
     printMenu();
     do
@@ -98,8 +129,36 @@ int main (void){
         }
     } while (inputCLI!='7');
 
-    //Sparar patientdata i patienter.txt
-    
+    //Sparar patientdata i angiven .txt
+    //Flytta till funktion
+    if ((pFile=fopen("patienter.txt", "w")))
+    {
+        fprintf(pFile, "%d\n", lastPatient);
+        for (int i = 0; i < lastPatient; i++)
+        {
+            fprintf(pFile, "%s\n", patients[i].name);
+            fprintf(pFile, "%s\n", patients[i].personNummer);
+            fprintf(pFile, "%d\n", patients[i].numberOfImages);
+            if (patients[i].numberOfImages)
+            {
+                for (int img = 0; img < patients[i].numberOfImages; img++)
+                {
+                    fprintf(pFile, "%d ", patients[i].images[img]);
+                }
+            }
+            else{
+                fprintf(pFile, "%d ", 0);
+            }
+            
+            fprintf(pFile, "\n");
+        }
+    }
+    else{
+        printf("ERROR Inlasning!\n");
+    }
+    fclose(pFile);
+    printf("Sparar i patienter.txt\n");
+    //
 }
 
 //Skriver ut alternativen för huvudmenyn
@@ -117,6 +176,7 @@ void printMenu(void){
 //Skapar ny Patient med unikt personnummer och unika bildreferenser
 void addPatient(Patient patRegister[], int *pSize){
     int input = 0;
+    int checkLocal = 0;
     Search checkDB;
     Patient newPatient;
     do
@@ -143,12 +203,20 @@ void addPatient(Patient patRegister[], int *pSize){
             printf("Ange bildreferens %d (0 for att avsluta): ", newPatient.numberOfImages+1);
             scanf("%d", &input);
             checkDB = searchRegisterImage(patRegister, *pSize, input);
-            if (checkDB.totalResults)
+            checkLocal=0;
+            for (int i = 0; i < newPatient.numberOfImages; i++)
+            {
+                if (input == newPatient.images[i])
+                {
+                    checkLocal = 1;
+                }  
+            }
+            if (checkDB.totalResults || checkLocal)
             {
                 printf("Referensen existerar redan!\n");
             }
         
-        } while (checkDB.totalResults && input);
+        } while ((checkDB.totalResults || checkLocal) && input);
         if (input)
         {
             newPatient.images[newPatient.numberOfImages] = input;
@@ -159,7 +227,6 @@ void addPatient(Patient patRegister[], int *pSize){
 
     patRegister[*pSize] = newPatient;
     (*pSize)++;
-
 }
 //Skriver ut size antal patienter i en Patient array
 void printPatients(Patient patientsPrint[], int size){
