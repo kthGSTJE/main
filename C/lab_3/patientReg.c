@@ -44,50 +44,21 @@ void sortName(Patient patRegister[], int size);
 void unregisterPatient(Patient patRegister[], int *pSize);
 void confirmUnregistration(Patient patRegister[], int *pSize, int unregIndex);
 
+void loadRegister(Patient patRegister[], int *pSize, char fileName[]);
+void saveRegister(Patient patRegister[], int size, char fileName[]);
+
 int main (void){
-    FILE *pFile;
     char fileName[FILENAMELENGTH];
 
     Patient patients[MAXPATIENTS];
     int lastPatient = 0;
-    int dud = 0;
     char inputCLI = '*';
     //Startup - Val av lagringsfil
     printf("\nPATIENTJOURNALSYSTEM\n\n");
     printf("Vilken fil vill du anvanda: ");
     scanf("%s", fileName);
     //Läser in angiven fil
-    //Flytta till egen funktion
-    if ((pFile=fopen("patienter.txt", "r")))
-    {
-        fscanf(pFile, "%d", &lastPatient);
-        if (lastPatient<=MAXPATIENTS)
-        {
-            for (int i = 0; i < lastPatient; i++)
-            {
-                fscanf(pFile, " %[^'\n']%*c", patients[i].name);
-                fscanf(pFile, "%s", patients[i].personNummer);
-                fscanf(pFile, "%d", &patients[i].numberOfImages);
-                if (patients[i].numberOfImages)
-                {
-                    for (int img = 0; img < patients[i].numberOfImages; img++)
-                    {
-                        fscanf(pFile, "%d", &patients[i].images[img]);
-                    }
-                }
-                else{
-                    fscanf(pFile, "%d");
-                }
-            }
-        }
-        else{
-            printf("Error! For stor fil\n");
-            lastPatient=0;
-        }
-    }
-    fclose(pFile);
-    //
-    //CLI huvuddelen av programmet 
+    loadRegister(patients, &lastPatient, fileName);
     printMenu();
     do
     {
@@ -129,36 +100,7 @@ int main (void){
         }
     } while (inputCLI!='7');
 
-    //Sparar patientdata i angiven .txt
-    //Flytta till funktion
-    if ((pFile=fopen("patienter.txt", "w")))
-    {
-        fprintf(pFile, "%d\n", lastPatient);
-        for (int i = 0; i < lastPatient; i++)
-        {
-            fprintf(pFile, "%s\n", patients[i].name);
-            fprintf(pFile, "%s\n", patients[i].personNummer);
-            fprintf(pFile, "%d\n", patients[i].numberOfImages);
-            if (patients[i].numberOfImages)
-            {
-                for (int img = 0; img < patients[i].numberOfImages; img++)
-                {
-                    fprintf(pFile, "%d ", patients[i].images[img]);
-                }
-            }
-            else{
-                fprintf(pFile, "%d ", 0);
-            }
-            
-            fprintf(pFile, "\n");
-        }
-    }
-    else{
-        printf("ERROR Inlasning!\n");
-    }
-    fclose(pFile);
-    printf("Sparar i patienter.txt\n");
-    //
+    saveRegister(patients, lastPatient, fileName);
 }
 
 //Skriver ut alternativen för huvudmenyn
@@ -376,12 +318,12 @@ void addImage(Patient patRegister[], int size){
         printf("Sok pa personnummer(1), namn(2), bildreferens(3), avsluta(4): ");
         scanf(" %c", &searchCLI);
         searchDB = searchModule(patRegister, size, searchCLI);
-        if (searchDB.totalResults!=1)
+        if (searchDB.totalResults!=1 && searchCLI!='4')
         {
-            printf("Du fick inte exakt 1 träff\n");
+            printf("Du fick inte exakt 1 traff\n");
         }
-    } while ((searchDB.totalResults!=1) || searchCLI=='4');
-    if (patRegister[searchDB.results[0]].numberOfImages<10)
+    } while ((searchDB.totalResults!=1) && searchCLI!='4');
+    if (patRegister[searchDB.results[0]].numberOfImages<10 && searchCLI!='4')
     {
         do
         {   
@@ -403,6 +345,9 @@ void addImage(Patient patRegister[], int size){
             }
 
         } while (imageRef!=0 && patRegister[searchDB.results[0]].numberOfImages<10);
+    }
+    else if(searchCLI == '4'){
+        printf("Atergar till huvudprogram\n");
     }
     else{
         printf("Max antal bilder finns redan!\n");
@@ -472,24 +417,27 @@ void unregisterPatient(Patient patRegister[], int *pSize){
         printf("Sok pa personnummer(1), namn(2), bildreferens(3), avsluta(4): ");
         scanf(" %c", &searchCLI);
         searchDB = searchModule(patRegister, *pSize, searchCLI);
-        if (searchDB.totalResults!=1)
+        if (searchDB.totalResults!=1 && searchCLI!='4')
         {
-            printf("Du fick inte exakt 1 träff\n");
+            printf("Du fick inte exakt 1 traff\n");
         }
-    } while ((searchDB.totalResults!=1) || searchCLI=='4');
-    char input = '*';
-    printf("Vill du avregistrera patienten (j/n)? ");
-    scanf(" %c", &input);
-    switch (input)
+    } while ((searchDB.totalResults!=1) && searchCLI!='4');
+    if (searchCLI!= '4')
     {
-    case 'j':
-        confirmUnregistration(patRegister, pSize, searchDB.results[0]);
-        break;
-    case 'n':
-        
-        break;
-    default:
-        break;
+        char input = '*';
+        printf("Vill du avregistrera patienten (j/n)? ");
+        scanf(" %c", &input);
+        switch (input)
+        {
+        case 'j':
+            confirmUnregistration(patRegister, pSize, searchDB.results[0]);
+            break;
+        case 'n':
+
+            break;
+        default:
+            break;
+        }
     }
 }
 void confirmUnregistration(Patient patRegister[], int *pSize, int unregIndex){
@@ -498,4 +446,69 @@ void confirmUnregistration(Patient patRegister[], int *pSize, int unregIndex){
     patRegister[unregIndex] = patRegister[*pSize];
     patRegister[*pSize] = empty;
     printf("Patienten avregistreras\n");
+}
+
+void loadRegister(Patient patRegister[], int *pSize, char fileName[]){
+    FILE *pFile;
+    if ((pFile=fopen(fileName, "r")))
+    {
+        fscanf(pFile, "%d", &(*pSize));
+        if (*pSize<=MAXPATIENTS)
+        {
+            for (int i = 0; i < *pSize; i++)
+            {
+                fscanf(pFile, " %[^'\n']%*c", patRegister[i].name);
+                fscanf(pFile, "%s", patRegister[i].personNummer);
+                fscanf(pFile, "%d", &patRegister[i].numberOfImages);
+                if (patRegister[i].numberOfImages)
+                {
+                    for (int img = 0; img < patRegister[i].numberOfImages; img++)
+                    {
+                        fscanf(pFile, "%d", &patRegister[i].images[img]);
+                    }
+                }
+                else{
+                    fscanf(pFile, "%d");
+                }
+            }
+        }
+        else{
+            printf("Error! For stor fil för att ladda\n");
+            *pSize=0;
+        }
+    }
+    else{
+        printf("Error! Problem inlasning\n");
+    }
+    fclose(pFile);
+}
+void saveRegister(Patient patRegister[], int size, char fileName[]){
+    FILE *pFile;
+    if ((pFile=fopen(fileName, "w")))
+    {
+        fprintf(pFile, "%d\n", size);
+        for (int i = 0; i < size; i++)
+        {
+            fprintf(pFile, "%s\n", patRegister[i].name);
+            fprintf(pFile, "%s\n", patRegister[i].personNummer);
+            fprintf(pFile, "%d\n", patRegister[i].numberOfImages);
+            if (patRegister[i].numberOfImages)
+            {
+                for (int img = 0; img < patRegister[i].numberOfImages; img++)
+                {
+                    fprintf(pFile, "%d ", patRegister[i].images[img]);
+                }
+            }
+            else{
+                fprintf(pFile, "%d ", 0);
+            }
+            
+            fprintf(pFile, "\n");
+        }
+        printf("Sparar i %s\n", fileName);
+    }
+    else{
+        printf("ERROR Inlasning!\n");
+    }
+    fclose(pFile);
 }
