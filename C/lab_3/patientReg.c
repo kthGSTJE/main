@@ -57,7 +57,6 @@ int main (void){
     printf("\nPATIENTJOURNALSYSTEM\n\n");
     printf("Vilken fil vill du anvanda: ");
     scanf("%s", fileName);
-    //Läser in angiven fil
     loadRegister(patients, &lastPatient, fileName);
     printMenu();
     do
@@ -67,13 +66,7 @@ int main (void){
         switch (inputCLI)
         {
         case '1':
-            if (lastPatient<MAXPATIENTS)
-            {
-                addPatient(patients, &lastPatient);
-            }
-            else{
-                printf("Max antal patienter i register\n");
-            }
+            addPatient(patients, &lastPatient);
             break;
         case '2':
             printPatients(patients, lastPatient);
@@ -117,61 +110,69 @@ void printMenu(void){
 }
 //Skapar ny Patient med unikt personnummer och unika bildreferenser
 void addPatient(Patient patRegister[], int *pSize){
-    int input = 0;
-    int checkLocal = 0;
-    Search checkDB;
-    Patient newPatient;
-    do
+    printf("\nLAGG TILL PATIENT\n\n");
+    if (*pSize<MAXPATIENTS)
     {
-        printf("Ange personnummer: ");
-        scanf(" %[^'\n']%*c", newPatient.personNummer);
-        checkDB  = searchRegisterSSN(patRegister, *pSize, newPatient.personNummer);
-        if (checkDB.totalResults)
-        {
-            printf("Personnummeret existerar redan!\n");
-        }
-        
-    } while (checkDB.totalResults);
-    
-    
-    //kolla med databasen om pnummer existerar
-    printf("Ange Namn: ");
-    scanf("%[^'\n']%*c", newPatient.name);
-    newPatient.numberOfImages = 0;
-    do
-    {   
+        int input = 0;
+        int checkLocal = 0;
+        Search checkDB;
+        Patient newPatient;
         do
         {
-            printf("Ange bildreferens %d (0 for att avsluta): ", newPatient.numberOfImages+1);
-            scanf("%d", &input);
-            checkDB = searchRegisterImage(patRegister, *pSize, input);
-            checkLocal=0;
-            for (int i = 0; i < newPatient.numberOfImages; i++)
+            printf("Ange personnummer: ");
+            scanf(" %[^'\n']%*c", newPatient.personNummer);
+            checkDB  = searchRegisterSSN(patRegister, *pSize, newPatient.personNummer);
+            if (checkDB.totalResults)
             {
-                if (input == newPatient.images[i])
-                {
-                    checkLocal = 1;
-                }  
+                printf("Personnummeret existerar redan!\n");
             }
-            if (checkDB.totalResults || checkLocal)
-            {
-                printf("Referensen existerar redan!\n");
-            }
-        
-        } while ((checkDB.totalResults || checkLocal) && input);
-        if (input)
-        {
-            newPatient.images[newPatient.numberOfImages] = input;
-            newPatient.numberOfImages++;
-        }
-        
-    } while (input!=0 && newPatient.numberOfImages<10);
 
-    patRegister[*pSize] = newPatient;
-    (*pSize)++;
+        } while (checkDB.totalResults);
+
+
+        //kolla med databasen om pnummer existerar
+        printf("Ange Namn: ");
+        scanf("%[^'\n']%*c", newPatient.name);
+        newPatient.numberOfImages = 0;
+        do
+        {   
+            do
+            {
+                printf("Ange bildreferens %d (0 for att avsluta): ", newPatient.numberOfImages+1);
+                scanf("%d", &input);
+                checkDB = searchRegisterImage(patRegister, *pSize, input);
+                checkLocal=0;
+                for (int i = 0; i < newPatient.numberOfImages; i++)
+                {
+                    if (input == newPatient.images[i])
+                    {
+                        checkLocal = 1;
+                    }  
+                }
+                if (checkDB.totalResults || checkLocal)
+                {
+                    printf("Referensen existerar redan!\n");
+                }
+            
+            } while ((checkDB.totalResults || checkLocal) && input);
+            if (input)
+            {
+                newPatient.images[newPatient.numberOfImages] = input;
+                newPatient.numberOfImages++;
+            }
+
+        } while (input!=0 && newPatient.numberOfImages<10);
+
+        patRegister[*pSize] = newPatient;
+        (*pSize)++;
+    }
+    else{
+        printf("Max antal patienter i registret!\n");
+    }
 }
 //Skriver ut size antal patienter i en Patient array
 void printPatients(Patient patientsPrint[], int size){
+    printf("\nREGISTER\n\n");
     printPrintLabel();
     for (int p = 0; p < size; p++)
     {
@@ -201,6 +202,7 @@ void viewPatient(Patient thePatient){
 }
 
 void searchPatient(Patient patRegister[], int size){
+    printf("\nSOKNING\n\n");
     char searchCLI = '*';
     Search searchDB;
     if (size<=0)

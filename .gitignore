@@ -1,2 +1,4 @@
-#ignore ALL .txt files
+#ignore ALL .txt, .exe, .out files
 *.txt
+*.exe
+*.out
