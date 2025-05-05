@@ -458,6 +458,7 @@ void confirmUnregistration(Patient patRegister[], int *pSize, int unregIndex){
 
 void loadRegister(Patient patRegister[], int *pSize, char fileName[]){
     FILE *pFile;
+    int dud = 0;
     if ((pFile=fopen(fileName, "r")))
     {
         fscanf(pFile, "%d", &(*pSize));
@@ -476,7 +477,7 @@ void loadRegister(Patient patRegister[], int *pSize, char fileName[]){
                     }
                 }
                 else{
-                    fscanf(pFile, "%d");
+                    fscanf(pFile, "%d", &dud);
                 }
             }
         }
