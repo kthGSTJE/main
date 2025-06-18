@@ -1,5 +1,10 @@
 {
     "files.associations": {
-        "chrono": "c"
+        "chrono": "c",
+        "characters.h": "c",
+        "time.h": "c",
+        "stdio.h": "c",
+        "stdlib.h": "c",
+        "orbs.h": "c"
     }
 }
